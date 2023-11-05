@@ -63,6 +63,20 @@ app.get("/albums/:artistId", async (req, res, next) => {
   }
 });
 
+app.get("/tracks/:albumsId", async (req, res, next) => {
+  try {
+    console.log(req.params.albumsId);
+    const response = await spotifyApi.getAlbumTracks(req.params.albumsId);
+    console.log("Tracks in the album", response.body);
+    res.render("tracks.hbs", {
+      tracks: response.body,
+    });
+  } catch (error) {
+    console.log("The error while searching tracks occured: ", error);
+    next(error);
+  }
+});
+
 app.listen(3000, () =>
   console.log("My Spotify project running on port 3000 🎧 🥁 🎸 🔊")
 );
