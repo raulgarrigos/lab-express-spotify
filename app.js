@@ -37,14 +37,28 @@ app.get("/", (req, res, next) => {
 app.get("/artist-search", async (req, res, next) => {
   try {
     console.log(req.query.artist);
+
     const response = await spotifyApi.searchArtists(req.query.artist);
     console.log("The received data from the API: ", response.body);
-
     res.render("artist-search-results.hbs", {
       oneArtist: response.body,
     });
   } catch (error) {
     console.log("The error while searching artists occurred: ", error);
+    next(error);
+  }
+});
+
+app.get("/albums/:artistId", async (req, res, next) => {
+  try {
+    console.log(req.params.artistId);
+    const response = await spotifyApi.getArtistAlbums(req.params.artistId);
+    console.log("Artist albums", response.body);
+    res.render("albums.hbs", {
+      albums: response.body,
+    });
+  } catch (error) {
+    console.log("The error while searching albums occurred: ", error);
     next(error);
   }
 });
